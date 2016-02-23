@@ -19,8 +19,8 @@
 #define  SEARCHING_FOR_FLAP        0
 #define  GOING_TOWARDS_FLAP        1
 #define  RELOADING_TOKENS          2
-#define  SEARCHING_FOR_BEACON      3  
-#define  GOING_TOWARDS_BEACON      4
+#define  SEARCHING_FOR_BALANCE      3  
+#define  GOING_TOWARDS_BALANCE      4
 #define  DUMPING_TOKENS_SERVO_UP   5
 #define  DUMPING_TOKENS_SERVO_DOWN 6
 #define  SYSTEM_OFF                7
@@ -32,16 +32,16 @@
 #define  ONE_SECOND             1000
 #define  TOTAL_TIME             120*ONE_SECOND  
 #define  FLAP                   0
-#define  BEACON                 1
+#define  BALANCE                1
 #define  FORWARD_SPEED          130
 #define  TURN_SPEED             60
 
 /*---------------Module Function Prototypes---*/
-void SearchingForSensor(int sensor); // search for FLAP
+void SearchingForBeacon(int beacon); // search for FLAP
 void GoingTowardsFlap(void); // return for more tokens
-void ReloadingTokens(void); // go to beacon
-void SearchingForBeacon(void); // search for beacon
-void GoingTowardsBeacon(void); // go to beacon
+void ReloadingTokens(void); // stay still
+void SearchingForBalance(void); // search for balance
+void GoingTowardsBalance(void); // go to balance
 void DumpingTokensServoUp(void); // initialize servo
 void DumpingTokensServoDown(void); // retract servo
 void SystemOff(void);
@@ -56,7 +56,7 @@ void GoBackwards(void);
 void Stop(void);
 void DeployTokenDispenser(void);
 
-unsigned char TestForFLAPOrBeacon(int pin);
+unsigned char TestForFLAPOrBalance(int pin);
 unsigned char TestForCarryingTokens(void);
 unsigned char TestForBumperHit(int bumperPin);
 unsigned char TestForBothBumpersHit(void);
@@ -110,11 +110,11 @@ void loop() {
     state = SYSTEM_OFF;
   }
   switch(state) {
-    case(SEARCHING_FOR_FLAP): SearchingForSensor(FLAP); break;
+    case(SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
     case(GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
     case(RELOADING_TOKENS): ReloadingTokens(); break;
-    case(SEARCHING_FOR_BEACON): SearchingForSensor(BEACON); break;
-    case(GOING_TOWARDS_BEACON): GoingTowardsBeacon(); break;
+    case(SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
+    case(GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
     case(DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
     case(DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
     case(SYSTEM_OFF): SystemOff(); break;    
@@ -123,17 +123,17 @@ void loop() {
   }
 }
 
-void SearchingForSensor(int sensor) {
-  if (TestForFLAPOrBeacon(IRPinCenter) == sensor) {
+void SearchingForBeacon(int beacon) {
+  if (TestForFLAPOrBalance(IRPinCenter) == beacon) {
     Stop();
-    if (sensor == FLAP) {
+    if (beacon == FLAP) {
       state = GOING_TOWARDS_FLAP;
     } else {
-      state = GOING_TOWARDS_BEACON;
+      state = GOING_TOWARDS_BALANCE;
     }
-  } else if (TestForFLAPOrBeacon(IRPinRight) == sensor) {
+  } else if (TestForFLAPOrBalance(IRPinRight) == beacon) {
     TurnRight();
-  } else if (TestForFLAPOrBeacon(IRPinLeft) == sensor) {
+  } else if (TestForFLAPOrBalance(IRPinLeft) == beacon) {
     TurnLeft();
   } else {
     TurnRight();
@@ -144,7 +144,7 @@ void GoingTowardsFlap(void) {
   if (TestForBumperHit(bumperPinRight) || TestForBumperHit(bumperPinLeft)) {
     Stop();
     state = RELOADING_TOKENS;
-  } else if (TestForFLAPOrBeacon(IRPinCenter) == FLAP) {
+  } else if (TestForFLAPOrBalance(IRPinCenter) == FLAP) {
      GoForward();
    } else {
       state = SEARCHING_FOR_FLAP; 
@@ -153,13 +153,13 @@ void GoingTowardsFlap(void) {
 
 void ReloadingTokens(void) {
   if (TestForCarryingTokens()) {
-    state = SEARCHING_FOR_BEACON; 
+    state = SEARCHING_FOR_BALANCE; 
   } else {
     Stop();
   }
 }
 
-void GoingTowardsBeacon(void) {
+void GoingTowardsBalance(void) {
   if (TestForBothBumpersHit()) {
     Stop();
     state = DUMPING_TOKENS_SERVO_UP;
@@ -167,10 +167,10 @@ void GoingTowardsBeacon(void) {
     //TODO: reverse and turn right
   } else if (TestForBumperHit(bumperPinLeft)) {
     //TODO: reverse and turn left
-  } else if (TestForFLAPOrBeacon(IRPinCenter) == BEACON) {
+  } else if (TestForFLAPOrBalance(IRPinCenter) == BALANCE) {
      GoForward();
    } else {
-      state = SEARCHING_FOR_BEACON; 
+      state = SEARCHING_FOR_BALANCE; 
    }
 }
 
@@ -204,7 +204,7 @@ unsigned char TestTimerExpired(int timer) {
   return (unsigned char)(TMRArd_IsTimerExpired(timer));
 }
 
-unsigned char TestForFLAPOrBeacon(int pin) {
+unsigned char TestForFLAPOrBalance(int pin) {
    // 50% duty cycle --> T = 2*t_pulse --> f = 500000/t_pulse
   frequency = 500000/pulseIn(pin, LOW);
   if ((frequency > 4000) && (frequency < 6000)) {
@@ -212,7 +212,7 @@ unsigned char TestForFLAPOrBeacon(int pin) {
     return FLAP;
   } else if ((frequency > 800) && (frequency < 1200)) {
     Serial.println("I see a balance!");
-    return BEACON;
+    return BALANCE;
   }
 }
 
