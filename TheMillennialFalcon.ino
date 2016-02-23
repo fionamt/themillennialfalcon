@@ -33,6 +33,8 @@
 #define  TOTAL_TIME             120*ONE_SECOND  
 #define  FLAP                   0
 #define  BEACON                 1
+#define  FORWARD_SPEED          130
+#define  TURN_SPEED             60
 
 /*---------------Module Function Prototypes---*/
 void SearchingForSensor(int sensor); // search for FLAP
@@ -56,7 +58,8 @@ void DeployTokenDispenser(void);
 
 unsigned char TestForFLAPOrBeacon(int pin);
 unsigned char TestForCarryingTokens(void);
-unsigned char TestForBumperHit(void);
+unsigned char TestForBumperHit(int bumperPin);
+unsigned char TestForBothBumpersHit(void);
 
 
  /*---------------Global Variables-------*/
@@ -65,8 +68,14 @@ int IRPinLeft = 2; // IR pin at the left side
 int IRPinRight = 4; // IR pin at the right side
 int IRPinCenter = 7; // IR pin at the front side
 
-int servoPin = 9;
-int bumperPin = 12;
+int servoPin = 3;
+int motorPinDirLeft = 8;
+int motorPinEnLeft = 9;
+int motorPinDirRight = 5;
+int motorPinEnRight = 11;
+
+int bumperPinRight = 6;
+int bumperPinLeft = 12;
 int tokenPin = 13;
 
  /*---- State Variables-----*/
@@ -87,6 +96,10 @@ void setup() {
   
   // Initialize motors
   servo.attach(servoPin);
+  pinMode(motorPinDirLeft, OUTPUT);
+  pinMode(motorPinEnLeft, OUTPUT);
+  pinMode(motorPinDirRight, OUTPUT);
+  pinMode(motorPinEnRight, OUTPUT);
   
   // Start timer
   StartTimer(ROBOT_TIMER, TOTAL_TIME);  
@@ -128,7 +141,7 @@ void SearchingForSensor(int sensor) {
 }
 
 void GoingTowardsFlap(void) {
-  if (TestForBumperHit()) {
+  if (TestForBumperHit(bumperPinRight) || TestForBumperHit(bumperPinLeft)) {
     Stop();
     state = RELOADING_TOKENS;
   } else if (TestForFLAPOrBeacon(IRPinCenter) == FLAP) {
@@ -147,9 +160,13 @@ void ReloadingTokens(void) {
 }
 
 void GoingTowardsBeacon(void) {
-  if (TestForBumperHit()) {
+  if (TestForBothBumpersHit()) {
     Stop();
     state = DUMPING_TOKENS_SERVO_UP;
+  } else if (TestForBumperHit(bumperPinRight)) {
+    //TODO: reverse and turn right
+  } else if (TestForBumperHit(bumperPinLeft)) {
+    //TODO: reverse and turn left
   } else if (TestForFLAPOrBeacon(IRPinCenter) == BEACON) {
      GoForward();
    } else {
@@ -168,7 +185,11 @@ void DumpingTokensServoDown(void) {
   servoPos = 0;
   servo.write(servoPos);
   delay(15);
-  state = SEARCHING_FOR_FLAP;
+  if (TestForCarryingTokens()) {
+    state = DUMPING_TOKENS_SERVO_DOWN;
+  } else {
+    state = SEARCHING_FOR_FLAP;
+  }
 }
 
 void SystemOff(void) {
@@ -199,26 +220,43 @@ unsigned char TestForCarryingTokens(void) {
   return digitalRead(tokenPin);
 }
 
-unsigned char TestForBumperHit(void) {
+unsigned char TestForBothBumpersHit(void) {
+  return (digitalRead(bumperPinRight) && digitalRead(bumperPinLeft));
+}
+
+unsigned char TestForBumperHit(int bumperPin) {
   return digitalRead(bumperPin);
 }
 
 void TurnRight(void) {
-  Serial.println("Turning Right!");
+  digitalWrite(motorPinDirRight, LOW);
+  digitalWrite(motorPinDirLeft, HIGH);
+  analogWrite(motorPinEnLeft, TURN_SPEED);
+  analogWrite(motorPinEnRight, TURN_SPEED);
 }
 
 void TurnLeft(void) {
-  Serial.println("Turning Left!");
+  digitalWrite(motorPinDirRight, HIGH);
+  digitalWrite(motorPinDirLeft, LOW);
+  analogWrite(motorPinEnLeft, TURN_SPEED);
+  analogWrite(motorPinEnRight, TURN_SPEED);
 }
 
 void GoForward(void) {
-  Serial.println("Go Forward!");
+  digitalWrite(motorPinDirRight, HIGH);
+  digitalWrite(motorPinDirLeft, HIGH);
+  analogWrite(motorPinEnLeft, FORWARD_SPEED);
+  analogWrite(motorPinEnRight, FORWARD_SPEED);
 }
 
 void GoBackwards(void) {
-  Serial.println("Go Backwards!");
+  digitalWrite(motorPinDirRight, LOW);
+  digitalWrite(motorPinDirLeft, LOW);
+  analogWrite(motorPinEnLeft, FORWARD_SPEED);
+  analogWrite(motorPinEnRight, FORWARD_SPEED);
 }
 
 void Stop(void) {
-    Serial.println("Turn off motors!");
+  analogWrite(motorPinEnLeft, 0);
+  analogWrite(motorPinEnRight, FORWARD_SPEED);
 }
