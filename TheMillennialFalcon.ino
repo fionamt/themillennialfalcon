@@ -66,6 +66,8 @@ int IRPinRight = 4; // IR pin at the right side
 int IRPinCenter = 7; // IR pin at the front side
 
 int servoPin = 9;
+int bumperPin = 12;
+int tokenPin = 13;
 
  /*---- State Variables-----*/
 boolean state = 0; // begin with 7 tokens
@@ -156,25 +158,17 @@ void GoingTowardsBeacon(void) {
 }
 
 void DumpingTokensServoUp(void) {
-  if (!TestForCarryingTokens()) {
-    state = SEARCHING_FOR_FLAP;
-  } else {
-    servoPos = 180;
-    servo.write(servoPos);
-    delay(15);
-    state = DUMPING_TOKENS_SERVO_DOWN;
-  }
+  servoPos = 180;
+  servo.write(servoPos);
+  delay(15);
+  state = DUMPING_TOKENS_SERVO_DOWN;
 }
 
 void DumpingTokensServoDown(void) {
-  if (!TestForCarryingTokens()) {
-    state = SEARCHING_FOR_FLAP;
-  } else {
-    servoPos = 0;
-    servo.write(servoPos);
-    delay(15);
-    state = DUMPING_TOKENS_SERVO_UP;
-  }
+  servoPos = 0;
+  servo.write(servoPos);
+  delay(15);
+  state = SEARCHING_FOR_FLAP;
 }
 
 void SystemOff(void) {
@@ -202,11 +196,11 @@ unsigned char TestForFLAPOrBeacon(int pin) {
 }
 
 unsigned char TestForCarryingTokens(void) {
-  
+  return digitalRead(tokenPin);
 }
 
 unsigned char TestForBumperHit(void) {
-  
+  return digitalRead(bumperPin);
 }
 
 void TurnRight(void) {
