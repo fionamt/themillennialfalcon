@@ -3,7 +3,6 @@
   Contents:
   Notes:     Target: Arduino Leonardo
              Arduino IDE vercv     version: 1.6.7
-
   History:
   when       who  what/why
   ----       ---  ---------------------------------------------
@@ -25,6 +24,8 @@
 #define  DUMPING_TOKENS_SERVO_DOWN 6
 #define  SYSTEM_OFF                7
 #define  TRAPPED                   8
+#define  BACKUP                    9
+#define  FORWARD                  10
 
 /*----- Timers -----*/
 #define  ROBOT_TIMER            0
@@ -33,8 +34,8 @@
 /*----- Time Constants -----*/
 #define  ONE_SECOND             1000
 #define  TOTAL_TIME             120000UL
-#define  REVERSE_TIME           1000 // how long robot reverses when hits obstacle
-#define  TURN_TIME              400 // how long robot turns when hits obstacle
+#define  REVERSE_TIME           800 // how long robot reverses when hits obstacle
+#define  TURN_TIME              300 // how long robot turns when hits obstacle
 #define  STOP_TIME              200 // how long robot stops once locates beacon
 #define  FOUND_TIME             800 // how long robot goes forward once finds beacon
 #define  TRAPPED_TIME           ONE_SECOND
@@ -43,9 +44,9 @@
 #define  DUMP_TIME              ONE_SECOND
 
 /*----- Speed Constants -----*/
-#define  FORWARD_LEFT_SPEED     170
+#define  FORWARD_LEFT_SPEED     180
 #define  FORWARD_RIGHT_SPEED    180
-#define  REVERSE_LEFT_SPEED     90
+#define  REVERSE_LEFT_SPEED     80
 #define  REVERSE_RIGHT_SPEED    80
 #define  TURN_REV_SPEED         100
 #define  TURN_FOR_SPEED         160
@@ -90,9 +91,9 @@ unsigned char TestForBothBumpersHit(int direction);
 int IRPinBack = 4; // IR pin at the left side
 int IRPinFront = 2; // IR pin at the right side
 
-int servoPin = 11;
+int servoPin = 5;
 int motorPinDirLeft = 8;
-int motorPinEnLeft = 3;
+int motorPinEnLeft = 11;
 int motorPinDirRight = 10;
 int motorPinEnRight = 6;
 
@@ -100,7 +101,7 @@ int bumperPinTopRight = 9;
 int bumperPinTopLeft = 12;
 int bumperPinBottomRight = 7;
 int bumperPinBottomLeft = 13;
-int bumperPinTopCenter = 5;
+int bumperPinTopCenter = A0;
 
 int onSwitch = 14;
 
@@ -152,25 +153,45 @@ void setup() {
 }
 
 void loop() {
-//    if (TestTimerExpired(ROBOT_TIMER) || (millis() - startTime >= TOTAL_TIME)) {
-//      Serial.println("System off!");
-//      state = SYSTEM_OFF;
-//    }
-//    delay(100);
-//    switch (state) {
-//      case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
-//      case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
-//      case (RELOADING_TOKENS): ReloadingTokens(); break;
-//      case (SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
-//      case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
-//      case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
-//      case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
-//      case (SYSTEM_OFF): SystemOff(); break;
-//      //    case (TRAPPED): Trapped(); break;
-//  
-//      default: Serial.println("Something went horribly wrong");
-//    }
-GoBackwards();
+  GoForward();
+  
+    if (TestTimerExpired(ROBOT_TIMER) || (millis() - startTime >= TOTAL_TIME)) {
+      Serial.println("System off!");
+      state = SYSTEM_OFF;
+    }
+    int prev_state=0;
+    
+    delay(100);
+    if (TestForBumperHit(bumperPinTopRight) || TestForBumperHit(bumperPinTopLeft)){
+      prev_state = (state == GOING_TOWARDS_BALANCE) ? SEARCHING_FOR_BALANCE : state;
+      state = BACKUP;
+    }
+    else if ((TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft)) && state != RELOADING_TOKENS){
+      prev_state = state;
+      state   = (state == GOING_TOWARDS_FLAP) ? RELOADING_TOKENS : FORWARD;
+    }
+    if (TestForBumperHit(bumperPinTopCenter) && !(state == DUMPING_TOKENS_SERVO_UP || state == DUMPING_TOKENS_SERVO_DOWN)){
+      prev_state = state;
+      state = (state == GOING_TOWARDS_BALANCE) ? DUMPING_TOKENS_SERVO_UP : BACKUP;
+      
+    }    
+
+    switch (state) {
+      case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
+      case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
+      case (RELOADING_TOKENS): ReloadingTokens(); break;
+      case (SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
+      case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
+      case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
+      case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
+      case (BACKUP):  BackUp(prev_state); break;
+      case (FORWARD): ForwardUp(prev_state); break;
+      case (SYSTEM_OFF): SystemOff(); break;
+      //    case (TRAPPED): Trapped(); break;
+  
+      default: Serial.println("Something went horribly wrong");
+    }
+    
 }
 
 void SearchingForBeacon(int beacon) {
@@ -321,6 +342,20 @@ void GoingTowardsBalance(void) {
   }
 }
 
+void ForwardUp(int prev_state){
+  Serial.println("stuck on behind");
+  GoForward();
+  delay(REVERSE_TIME);
+  state = prev_state;
+}
+
+void BackUp(int prev_state){
+  Serial.println("stuck on front");
+  GoBackwards();
+  delay(REVERSE_TIME);
+  state = prev_state;
+}
+
 void DumpingTokensServoUp(void) {
   Serial.println("Dumping tokens servo up");
   servo.write(SERVO_DOWN);
@@ -332,6 +367,8 @@ void DumpingTokensServoDown(void) {
   Serial.println("Dumping tokens servo down");
   servo.write(SERVO_UP);
   delay(DUMP_TIME);
+  GoBackwards();
+  delay(REVERSE_TIME);
   state = SEARCHING_FOR_FLAP;
 }
 
