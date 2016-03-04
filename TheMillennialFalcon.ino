@@ -24,6 +24,7 @@
 #define  DUMPING_TOKENS_SERVO_UP   5
 #define  DUMPING_TOKENS_SERVO_DOWN 6
 #define  SYSTEM_OFF                7
+#define  TRAPPED                   8
 
 /*----- Timers -----*/
 #define  ROBOT_TIMER            0
@@ -31,9 +32,9 @@
 
 /*----- Time Constants -----*/
 #define  ONE_SECOND             1000
-#define  TOTAL_TIME             120*ONE_SECOND
-#define  REVERSE_TIME           900 // how long robot reverses when hits obstacle
-#define  TURN_TIME              500 // how long robot turns when hits obstacle
+#define  TOTAL_TIME             120000UL
+#define  REVERSE_TIME           1000 // how long robot reverses when hits obstacle
+#define  TURN_TIME              400 // how long robot turns when hits obstacle
 #define  STOP_TIME              200 // how long robot stops once locates beacon
 #define  FOUND_TIME             800 // how long robot goes forward once finds beacon
 #define  TRAPPED_TIME           ONE_SECOND
@@ -45,7 +46,7 @@
 #define  FORWARD_LEFT_SPEED     170
 #define  FORWARD_RIGHT_SPEED    180
 #define  REVERSE_LEFT_SPEED     90
-#define  REVERSE_RIGHT_SPEED    90
+#define  REVERSE_RIGHT_SPEED    80
 #define  TURN_REV_SPEED         100
 #define  TURN_FOR_SPEED         160
 
@@ -67,6 +68,7 @@ void GoingTowardsBalance(void); // go to balance
 void DumpingTokensServoUp(void); // initialize servo
 void DumpingTokensServoDown(void); // retract servo
 void SystemOff(void);
+void Trapped(void);
 
 void StartTimer(int timer, int time);
 unsigned char TestTimerExpired(int timer);
@@ -100,16 +102,30 @@ int bumperPinBottomRight = 7;
 int bumperPinBottomLeft = 13;
 int bumperPinTopCenter = 5;
 
+int onSwitch = 14;
+
 /*---- State Variables-----*/
-int state = SEARCHING_FOR_FLAP; // begin with 7 tokens
+int state = SEARCHING_FOR_BALANCE; // begin with 7 tokens
 
 /*----Other Variables-----*/
 int frequency = 0; // initialize frequency
 Servo servo;
 int counter = 0;
+boolean reverse = 0;
+int beaconCounter = 0;
+int startTime = 0;
+
+int leftHit = 0;
+int rightHit = 0;
+int centerHit = 0;
+int backLeftHit = 0;
+int backRightHit = 0;
 
 void setup() {
   Serial.begin(9600);
+
+  // Initialize on switch
+  pinMode(onSwitch, INPUT);
 
   // Initialize IR pins
   pinMode(IRPinFront, INPUT);
@@ -132,44 +148,60 @@ void setup() {
 
   // Start timer
   StartTimer(ROBOT_TIMER, TOTAL_TIME);
+  startTime = millis();
 }
 
 void loop() {
-  long timeLeft = TMRArd_IsTimerActive(ROBOT_TIMER);
-  Serial.println(timeLeft);
-  if (TestTimerExpired(ROBOT_TIMER)) {
-    Serial.println("System off!");
-    state = SYSTEM_OFF;
-  }
-  if ((state != DUMPING_TOKENS_SERVO_UP && state != RELOADING_TOKENS && state != SYSTEM_OFF) && TestTimerExpired(SWITCH_TIMER) && (TestForBumperHit(bumperPinTopRight) || TestForBumperHit(bumperPinTopLeft) || TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft) || TestForBumperHit(bumperPinTopCenter))) {
-    Serial.println("Trapped!");
-    if (state == SEARCHING_FOR_FLAP || state == GOING_TOWARDS_FLAP) {
-      GoForward();
-      delay(TRAPPED_TIME);
-    } else {
-      GoBackwards();
-      delay(TRAPPED_TIME);
+//  if (digitalRead(onSwitch)) {
+    if (TestTimerExpired(ROBOT_TIMER) || (millis() - startTime >= TOTAL_TIME)) {
+      Serial.println("System off!");
+      state = SYSTEM_OFF;
     }
-  } else if (!((TestForBumperHit(bumperPinTopRight) || TestForBumperHit(bumperPinTopLeft) || TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft) || TestForBumperHit(bumperPinTopCenter)))) {
-    TMRArd_StopTimer(SWITCH_TIMER);
-  }
-  delay(100);
-  switch (state) {
-    case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
-    case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
-    case (RELOADING_TOKENS): ReloadingTokens(); break;
-    case (SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
-    case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
-    case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
-    case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
-    case (SYSTEM_OFF): SystemOff(); break;
-
-    default: Serial.println("Something went horribly wrong");
-  }
+    delay(100);
+    switch (state) {
+      case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
+      case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
+      case (RELOADING_TOKENS): ReloadingTokens(); break;
+      case (SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
+      case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
+      case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
+      case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
+      case (SYSTEM_OFF): SystemOff(); break;
+      //    case (TRAPPED): Trapped(); break;
+  
+      default: Serial.println("Something went horribly wrong");
+    }
+//  } else {
+//    SystemOff();
+//  }
 }
 
 void SearchingForBeacon(int beacon) {
+  if (TestForBumperHit(bumperPinTopRight)) {
+    if (rightHit > 4) {
+      GoBackwards();
+      delay(2 * REVERSE_TIME);
+      TurnLeft();
+      delay(TURN_TIME);
+      rightHit = 0;
+    }
+  }
+    if (TestForBumperHit(bumperPinTopLeft)) {
+    if (rightHit > 4) {
+      GoBackwards();
+      delay(2 * REVERSE_TIME);
+      TurnLeft();
+      delay(TURN_TIME);
+      rightHit = 0;
+    }
+  }
   if (beacon == FLAP) {
+    //    if (beaconCounter > 5) {
+    //      GoForward();
+    //      delay(TRAPPED_TIME);
+    //      beaconCounter = 0;
+    //      return;
+    //    }
     Serial.println("Searching for Flap!");
     if (TestForFLAPOrBalance(IRPinBack) == beacon) {
       Stop();
@@ -177,9 +209,16 @@ void SearchingForBeacon(int beacon) {
       delay(STOP_TIME);
       GoBackwards();
       delay(FOUND_TIME);
-      return;
+      //      beaconCounter = 0;
+      //      return;
     }
   } else if (beacon == BALANCE) {
+    //    if (beaconCounter > 5) {
+    //      GoBackwards();
+    //      delay(TRAPPED_TIME);
+    //      beaconCounter = 0;
+    //      return;
+    //    }
     Serial.println("Searching for balance!");
     if (TestForFLAPOrBalance(IRPinFront) == beacon) {
       Stop();
@@ -187,20 +226,40 @@ void SearchingForBeacon(int beacon) {
       delay(STOP_TIME);
       GoForward();
       delay(FOUND_TIME);
-      return;
+      //      beaconCounter = 0;
+      //      return;
     }
   }
   Serial.println("Turning right!");
   TurnRight();
+  //  beaconCounter = beaconCounter + 1;
+
 }
 
 void GoingTowardsFlap(void) {
   Serial.println("Going towards Flap!");
   if (TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft)) {
+    if (backRightHit > 4) {
+      GoForward();
+      delay(2 * REVERSE_TIME);
+      TurnRight();
+      delay(TURN_TIME);
+      rightHit = 0;
+    }
+    if (backLeftHit > 4) {
+      GoForward();
+      delay(2 * REVERSE_TIME);
+      TurnLeft();
+      delay(TURN_TIME);
+      rightHit = 0;
+    }
     Stop();
     state = RELOADING_TOKENS;
+    //    TMRArd_StopTimer(SWITCH_TIMER)
   } else if (TestForFLAPOrBalance(IRPinBack) == FLAP) {
     GoBackwards();
+    //        TMRArd_StopTimer(SWITCH_TIMER)
+
   } else {
     state = SEARCHING_FOR_FLAP;
   }
@@ -217,21 +276,51 @@ void GoingTowardsBalance(void) {
   Serial.println("Going towards Balance");
   if ((TestForBumperHit(bumperPinTopCenter) || (TestForBumperHit(bumperPinTopRight) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopRight)))) {
     Stop();
+    delay(STOP_TIME);
     state = DUMPING_TOKENS_SERVO_UP;
+    //    TMRArd_StopTimer(SWITCH_TIMER);
   } else if (TestForBumperHit(bumperPinTopRight)) {
+    if (rightHit > 4) {
+      GoBackwards();
+      delay(2 * REVERSE_TIME);
+      TurnLeft();
+      delay(TURN_TIME);
+      rightHit = 0;
+    }
+    Stop();
+    delay(STOP_TIME);
     GoBackwards();
     delay(REVERSE_TIME);
     TurnRight();
     delay(TURN_TIME);
   } else if (TestForBumperHit(bumperPinTopLeft)) {
+    if (leftHit > 4) {
+      GoBackwards();
+      delay(2 * REVERSE_TIME);
+      TurnRight();
+      delay(TURN_TIME);
+      leftHit = 0;
+    }
+    delay(STOP_TIME);
     GoBackwards();
     delay(REVERSE_TIME);
     TurnLeft();
     delay(TURN_TIME);
-  } else if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
+  } 
+  if (TestForBumperHit(bumperPinTopCenter)) {
+    if (centerHit > 4) {
+      GoBackwards();
+      delay(2 * REVERSE_TIME);
+      TurnRight();
+      delay(TURN_TIME);
+      centerHit = 0;
+    }
+  }
+    else if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
     GoForward();
   } else {
     state = SEARCHING_FOR_BALANCE;
+    TMRArd_StopTimer(SWITCH_TIMER);
   }
 }
 
@@ -247,12 +336,33 @@ void DumpingTokensServoDown(void) {
   servo.write(SERVO_UP);
   delay(DUMP_TIME);
   state = SEARCHING_FOR_FLAP;
-  //  }
 }
 
 void SystemOff(void) {
   Serial.println("System off!");
   Stop();
+}
+
+//Figure out state change
+void Trapped(void) {
+  //  Serial.println("Trapped!");
+  //  if (TestTimerExpired(SWITCH_TIMER)) { // && (TestForBumperHit(bumperPinTopRight) || TestForBumperHit(bumperPinTopLeft) || TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft) || TestForBumperHit(bumperPinTopCenter))) {
+  //    counter = counter + 1;
+  //  if (counter > 2) {
+  Serial.println("Trapped!");
+  if (reverse) {
+    GoForward();
+    delay(TRAPPED_TIME);
+  } else {
+    GoBackwards();
+    delay(TRAPPED_TIME);
+  }
+  counter = 0;
+  //    }
+  //  } else if (!((TestForBumperHit(bumperPinTopRight) || TestForBumperHit(bumperPinTopLeft) || TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft) || TestForBumperHit(bumperPinTopCenter)))) {
+  //    TMRArd_StopTimer(SWITCH_TIMER);
+  //    counter = 0;
+  //  }
 }
 
 void StartTimer(int timer, int time) {
@@ -280,7 +390,9 @@ unsigned char TestForFLAPOrBalance(int pin) {
 
 // 0 is front, 1 is back
 unsigned char TestForBothBumpersHit(int direction) {
-  StartTimer(SWITCH_TIMER, SWITCH_TIME);
+  if (counter == 0) {
+    StartTimer(SWITCH_TIMER, SWITCH_TIME);
+  }
   if (direction == 0) {
     return (digitalRead(bumperPinTopRight) && digitalRead(bumperPinTopLeft));
   } else if (direction == 1) {
@@ -289,7 +401,34 @@ unsigned char TestForBothBumpersHit(int direction) {
 }
 
 unsigned char TestForBumperHit(int bumperPin) {
-  StartTimer(SWITCH_TIMER, SWITCH_TIME);
+  //  if (counter == 0) {
+  //    StartTimer(SWITCH_TIMER, SWITCH_TIME);
+  //  }
+  if (bumperPin == bumperPinTopLeft) {
+    leftHit++;
+  } else {
+    leftHit = 0;
+  }
+  if (bumperPin == bumperPinTopRight) {
+    rightHit++;
+  } else {
+    rightHit = 0;
+  }
+  if (bumperPin == bumperPinTopCenter) {
+    centerHit++;
+  } else {
+    centerHit = 0;
+  }
+  if (bumperPin == bumperPinBottomLeft) {
+    backLeftHit++;
+  } else {
+    backLeftHit = 0;
+  }
+  if (bumperPin == bumperPinBottomRight) {
+    backRightHit++;
+  } else {
+    backRightHit = 0;
+  }
   return digitalRead(bumperPin);
 }
 
