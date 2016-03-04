@@ -105,7 +105,7 @@ int bumperPinTopCenter = 5;
 int onSwitch = 14;
 
 /*---- State Variables-----*/
-int state = SEARCHING_FOR_BALANCE; // begin with 7 tokens
+int state = SEARCHING_FOR_BALANCE; // begin with 7f tokens
 
 /*----Other Variables-----*/
 int frequency = 0; // initialize frequency
@@ -152,28 +152,25 @@ void setup() {
 }
 
 void loop() {
-//  if (digitalRead(onSwitch)) {
-    if (TestTimerExpired(ROBOT_TIMER) || (millis() - startTime >= TOTAL_TIME)) {
-      Serial.println("System off!");
-      state = SYSTEM_OFF;
-    }
-    delay(100);
-    switch (state) {
-      case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
-      case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
-      case (RELOADING_TOKENS): ReloadingTokens(); break;
-      case (SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
-      case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
-      case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
-      case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
-      case (SYSTEM_OFF): SystemOff(); break;
-      //    case (TRAPPED): Trapped(); break;
-  
-      default: Serial.println("Something went horribly wrong");
-    }
-//  } else {
-//    SystemOff();
-//  }
+//    if (TestTimerExpired(ROBOT_TIMER) || (millis() - startTime >= TOTAL_TIME)) {
+//      Serial.println("System off!");
+//      state = SYSTEM_OFF;
+//    }
+//    delay(100);
+//    switch (state) {
+//      case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
+//      case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
+//      case (RELOADING_TOKENS): ReloadingTokens(); break;
+//      case (SEARCHING_FOR_BALANCE): SearchingForBeacon(BALANCE); break;
+//      case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
+//      case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
+//      case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
+//      case (SYSTEM_OFF): SystemOff(); break;
+//      //    case (TRAPPED): Trapped(); break;
+//  
+//      default: Serial.println("Something went horribly wrong");
+//    }
+GoBackwards();
 }
 
 void SearchingForBeacon(int beacon) {
