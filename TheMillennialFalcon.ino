@@ -10,7 +10,6 @@
  ************************************************************/
 
 /*---------------Includes-----------------------------------*/
-#include <Timers.h>
 #include <Servo.h>
 
 /*---------------Module Defines-----------------------------*/
@@ -23,18 +22,12 @@
 #define  DUMPING_TOKENS_SERVO_UP   5
 #define  DUMPING_TOKENS_SERVO_DOWN 6
 #define  SYSTEM_OFF                7
-#define  BACKUP                    9
-#define  FORWARD                  10
-
-/*----- Timers -----*/
-#define  ROBOT_TIMER            0
-#define  SWITCH_TIMER           1
 
 /*----- Time Constants -----*/
 #define  ONE_SECOND             1000
 #define  TOTAL_TIME             120000UL
-#define  REVERSE_TIME           800 // how long robot reverses when hits obstacle
-#define  TURN_TIME              300 // how long robot turns when hits obstacle
+#define  REVERSE_TIME           1000 // how long robot reverses when hits obstacle
+#define  TURN_TIME              200 // how long robot turns when hits obstacle
 #define  STOP_TIME              200 // how long robot stops once locates beacon
 #define  FOUND_TIME             800 // how long robot goes forward once finds beacon
 #define  TRAPPED_TIME           ONE_SECOND
@@ -45,8 +38,12 @@
 /*----- Speed Constants -----*/
 #define  FORWARD_LEFT_SPEED     180
 #define  FORWARD_RIGHT_SPEED    175
+#define  REVERSE_LEFT_SPEED     80
+#define  REVERSE_RIGHT_SPEED    60
+#define  FORWARD_LEFT_SPEED     180
+#define  FORWARD_RIGHT_SPEED    175
 #define  REVERSE_LEFT_SPEED     75
-#define  REVERSE_RIGHT_SPEED    80
+#define  REVERSE_RIGHT_SPEED    90
 #define  TURN_REV_SPEED         100
 #define  TURN_FOR_SPEED         160
 
@@ -69,9 +66,6 @@ void DumpingTokensServoUp(void); // initialize servo
 void DumpingTokensServoDown(void); // retract servo
 void SystemOff(void);
 
-void StartTimer(int timer, int time);
-unsigned char TestTimerExpired(int timer);
-
 void TurnRight(void);
 void TurnLeft(void);
 void GoForward(void);
@@ -80,7 +74,6 @@ void Stop(void);
 void DeployTokenDispenser(void);
 
 unsigned char TestForFLAPOrBalance(int pin);
-//unsigned char TestForCarryingTokens(void);
 unsigned char TestForBumperHit(int bumperPin);
 unsigned char TestForBothBumpersHit(int direction);
 
@@ -93,30 +86,28 @@ int servoPin = 11;
 int motorPinDirLeft = 6;
 int motorPinEnLeft = 8;
 int motorPinDirRight = 3;
-int motorPinEnRight = 9;
+int motorPinEnRight = 14;
 
-int bumperPinTopRight = 6;
+int bumperPinTopRight = 5;
 int bumperPinTopLeft = 12;
 int bumperPinBottomRight = 7;
 int bumperPinBottomLeft = 13;
-int bumperPinTopCenter = 5;
+int bumperPinTopCenter = 10;
 
 /*---- State Variables-----*/
-int state = SEARCHING_FOR_BALANCE; // begin with 7f tokens
+int state = SEARCHING_FOR_BALANCE; // begin with 7 tokens
 
 /*----Other Variables-----*/
 int frequency = 0; // initialize frequency
 Servo servo;
-int counter = 0;
-boolean reverse = 0;
-int beaconCounter = 0;
-int startTime = 0;
-
 int leftHit = 0;
 int rightHit = 0;
 int centerHit = 0;
 int backLeftHit = 0;
 int backRightHit = 0;
+
+int startTime = 0;
+int stuckTime = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -141,32 +132,16 @@ void setup() {
   pinMode(motorPinEnRight, OUTPUT);
 
   // Start timer
-  StartTimer(ROBOT_TIMER, TOTAL_TIME);
   startTime = millis();
+  stuckTime = millis();
 }
 
 void loop() {
-
-  if (TestTimerExpired(ROBOT_TIMER) || (millis() - startTime >= TOTAL_TIME)) {
+  if (millis() - startTime >= TOTAL_TIME) {
     Serial.println("System off!");
     state = SYSTEM_OFF;
   }
-  int prev_state = 0;
-
   delay(100);
-  if (TestForBumperHit(bumperPinTopRight) || TestForBumperHit(bumperPinTopLeft)) {
-    prev_state = (state == GOING_TOWARDS_BALANCE) ? SEARCHING_FOR_BALANCE : state;
-    state = BACKUP;
-  }
-  else if ((TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft)) && state != RELOADING_TOKENS) {
-    prev_state = state;
-    state   = (state == GOING_TOWARDS_FLAP) ? RELOADING_TOKENS : FORWARD;
-  }
-  if (TestForBumperHit(bumperPinTopCenter) && !(state == DUMPING_TOKENS_SERVO_UP || state == DUMPING_TOKENS_SERVO_DOWN)) {
-    prev_state = state;
-    state = (state == GOING_TOWARDS_BALANCE) ? DUMPING_TOKENS_SERVO_UP : BACKUP;
-
-  }
 
   switch (state) {
     case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
@@ -176,35 +151,13 @@ void loop() {
     case (GOING_TOWARDS_BALANCE): GoingTowardsBalance(); break;
     case (DUMPING_TOKENS_SERVO_UP): DumpingTokensServoUp(); break;
     case (DUMPING_TOKENS_SERVO_DOWN): DumpingTokensServoDown(); break;
-    case (BACKUP):  BackUp(prev_state); break;
-    case (FORWARD): ForwardUp(prev_state); break;
     case (SYSTEM_OFF): SystemOff(); break;
-    //    case (TRAPPED): Trapped(); break;
 
     default: Serial.println("Something went horribly wrong");
   }
-
 }
 
 void SearchingForBeacon(int beacon) {
-  if (TestForBumperHit(bumperPinTopRight)) {
-    if (rightHit > 4) {
-      GoBackwards();
-      delay(2 * REVERSE_TIME);
-      TurnLeft();
-      delay(TURN_TIME);
-      rightHit = 0;
-    }
-  }
-  if (TestForBumperHit(bumperPinTopLeft)) {
-    if (rightHit > 4) {
-      GoBackwards();
-      delay(2 * REVERSE_TIME);
-      TurnLeft();
-      delay(TURN_TIME);
-      rightHit = 0;
-    }
-  }
   if (beacon == FLAP) {
     Serial.println("Searching for Flap!");
     if (TestForFLAPOrBalance(IRPinBack) == beacon) {
@@ -213,6 +166,7 @@ void SearchingForBeacon(int beacon) {
       delay(STOP_TIME);
       GoBackwards();
       delay(FOUND_TIME);
+      return;
     }
   } else if (beacon == BALANCE) {
     Serial.println("Searching for balance!");
@@ -222,35 +176,25 @@ void SearchingForBeacon(int beacon) {
       delay(STOP_TIME);
       GoForward();
       delay(FOUND_TIME);
+      return;
     }
   }
-  Serial.println("Turning right!");
-  TurnRight();
-
+  if (millis() - stuckTime > 4*ONE_SECOND) {
+    TurnLeft();
+  } else {
+    TurnRight();
+  }
 }
 
 void GoingTowardsFlap(void) {
   Serial.println("Going towards Flap!");
   if (TestForBumperHit(bumperPinBottomRight) || TestForBumperHit(bumperPinBottomLeft)) {
-    if (backRightHit > 4) {
-      GoForward();
-      delay(2 * REVERSE_TIME);
-      TurnRight();
-      delay(TURN_TIME);
-      rightHit = 0;
-    }
-    if (backLeftHit > 4) {
-      GoForward();
-      delay(2 * REVERSE_TIME);
-      TurnLeft();
-      delay(TURN_TIME);
-      rightHit = 0;
-    }
     Stop();
     state = RELOADING_TOKENS;
   } else if (TestForFLAPOrBalance(IRPinBack) == FLAP) {
     GoBackwards();
   } else {
+    stuckTime = millis();
     state = SEARCHING_FOR_FLAP;
   }
 }
@@ -259,6 +203,7 @@ void ReloadingTokens(void) {
   Serial.println("Reloading Tokens");
   Stop();
   delay(RELOAD_TIME);
+  stuckTime = millis();
   state = SEARCHING_FOR_BALANCE;
 }
 
@@ -266,65 +211,24 @@ void GoingTowardsBalance(void) {
   Serial.println("Going towards Balance");
   if ((TestForBumperHit(bumperPinTopCenter) || (TestForBumperHit(bumperPinTopRight) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopRight)))) {
     Stop();
-    delay(STOP_TIME);
     state = DUMPING_TOKENS_SERVO_UP;
   } else if (TestForBumperHit(bumperPinTopRight)) {
-    if (rightHit > 4) {
-      GoBackwards();
-      delay(2 * REVERSE_TIME);
-      TurnLeft();
-      delay(TURN_TIME);
-      rightHit = 0;
-    }
-    Stop();
-    delay(STOP_TIME);
     GoBackwards();
     delay(REVERSE_TIME);
     TurnRight();
     delay(TURN_TIME);
   } else if (TestForBumperHit(bumperPinTopLeft)) {
-    if (leftHit > 4) {
-      GoBackwards();
-      delay(2 * REVERSE_TIME);
-      TurnRight();
-      delay(TURN_TIME);
-      leftHit = 0;
-    }
-    delay(STOP_TIME);
     GoBackwards();
     delay(REVERSE_TIME);
     TurnLeft();
     delay(TURN_TIME);
   }
-  if (TestForBumperHit(bumperPinTopCenter)) {
-    if (centerHit > 4) {
-      GoBackwards();
-      delay(2 * REVERSE_TIME);
-      TurnRight();
-      delay(TURN_TIME);
-      centerHit = 0;
-    }
-  }
   else if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
     GoForward();
   } else {
+    stuckTime = millis();
     state = SEARCHING_FOR_BALANCE;
-    TMRArd_StopTimer(SWITCH_TIMER);
   }
-}
-
-void ForwardUp(int prev_state) {
-  Serial.println("stuck on behind");
-  GoForward();
-  delay(REVERSE_TIME);
-  state = prev_state;
-}
-
-void BackUp(int prev_state) {
-  Serial.println("stuck on front");
-  GoBackwards();
-  delay(REVERSE_TIME);
-  state = prev_state;
 }
 
 void DumpingTokensServoUp(void) {
@@ -340,20 +244,13 @@ void DumpingTokensServoDown(void) {
   delay(DUMP_TIME);
   GoBackwards();
   delay(REVERSE_TIME);
+  stuckTime = millis();
   state = SEARCHING_FOR_FLAP;
 }
 
 void SystemOff(void) {
   Serial.println("System off!");
   Stop();
-}
-
-void StartTimer(int timer, int time) {
-  TMRArd_InitTimer(timer, time);
-}
-
-unsigned char TestTimerExpired(int timer) {
-  return (unsigned char)(TMRArd_IsTimerExpired(timer));
 }
 
 unsigned char TestForFLAPOrBalance(int pin) {
@@ -363,7 +260,7 @@ unsigned char TestForFLAPOrBalance(int pin) {
   if ((frequency > 4000) && (frequency < 6000)) {
     Serial.println("I see the FLAP");
     return FLAP;
-  } else if ((frequency > 800) && (frequency < 1300)) {
+  } else if ((frequency > 800) && (frequency < 1200)) {
     Serial.println("I see a balance!");
     return BALANCE;
   } else {
@@ -373,9 +270,6 @@ unsigned char TestForFLAPOrBalance(int pin) {
 
 // 0 is front, 1 is back
 unsigned char TestForBothBumpersHit(int direction) {
-  if (counter == 0) {
-    StartTimer(SWITCH_TIMER, SWITCH_TIME);
-  }
   if (direction == 0) {
     return (digitalRead(bumperPinTopRight) && digitalRead(bumperPinTopLeft));
   } else if (direction == 1) {
@@ -384,33 +278,6 @@ unsigned char TestForBothBumpersHit(int direction) {
 }
 
 unsigned char TestForBumperHit(int bumperPin) {
-//  if (digitalRead(bumperPin)) {
-//    if (bumperPin == bumperPinTopLeft) {
-//      leftHit++;
-//    } else {
-//      leftHit = 0;
-//    }
-//    if (bumperPin == bumperPinTopRight) {
-//      rightHit++;
-//    } else {
-//      rightHit = 0;
-//    }
-//    if (bumperPin == bumperPinTopCenter) {
-//      centerHit++;
-//    } else {
-//      centerHit = 0;
-//    }
-//    if (bumperPin == bumperPinBottomLeft) {
-//      backLeftHit++;
-//    } else {
-//      backLeftHit = 0;
-//    }
-//    if (bumperPin == bumperPinBottomRight) {
-//      backRightHit++;
-//    } else {
-//      backRightHit = 0;
-//    }
-//  }
   return digitalRead(bumperPin);
 }
 
