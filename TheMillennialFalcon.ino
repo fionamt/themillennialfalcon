@@ -27,24 +27,18 @@
 #define  ONE_SECOND             1000
 #define  TOTAL_TIME             120000UL
 #define  REVERSE_TIME           1000 // how long robot reverses when hits obstacle
-#define  TURN_TIME              200 // how long robot turns when hits obstacle
-#define  STOP_TIME              200 // how long robot stops once locates beacon
-#define  FOUND_TIME             800 // how long robot goes forward once finds beacon
-#define  TRAPPED_TIME           ONE_SECOND
-#define  SWITCH_TIME            2*ONE_SECOND
+#define  TURN_TIME              150 // how long robot turns when hits obstacle
+#define  STOP_TIME              150 // how long robot stops once locates beacon
+#define  FOUND_TIME             500 // how long robot goes forward once finds beacon
 #define  RELOAD_TIME            1.5*ONE_SECOND
 #define  DUMP_TIME              ONE_SECOND
 
 /*----- Speed Constants -----*/
 #define  FORWARD_LEFT_SPEED     180
-#define  FORWARD_RIGHT_SPEED    175
+#define  FORWARD_RIGHT_SPEED    180
 #define  REVERSE_LEFT_SPEED     80
-#define  REVERSE_RIGHT_SPEED    60
-#define  FORWARD_LEFT_SPEED     180
-#define  FORWARD_RIGHT_SPEED    175
-#define  REVERSE_LEFT_SPEED     75
-#define  REVERSE_RIGHT_SPEED    90
-#define  TURN_REV_SPEED         100
+#define  REVERSE_RIGHT_SPEED    80
+#define  TURN_REV_SPEED         90
 #define  TURN_FOR_SPEED         160
 
 /*----- Servo Constants -----*/
@@ -86,7 +80,7 @@ int servoPin = 11;
 int motorPinDirLeft = 6;
 int motorPinEnLeft = 8;
 int motorPinDirRight = 3;
-int motorPinEnRight = 14;
+int motorPinEnRight = 1;
 
 int bumperPinTopRight = 5;
 int bumperPinTopLeft = 12;
@@ -137,12 +131,11 @@ void setup() {
 }
 
 void loop() {
+//  TurnLeft();
   if (millis() - startTime >= TOTAL_TIME) {
     Serial.println("System off!");
     state = SYSTEM_OFF;
   }
-  delay(100);
-
   switch (state) {
     case (SEARCHING_FOR_FLAP): SearchingForBeacon(FLAP); break;
     case (GOING_TOWARDS_FLAP): GoingTowardsFlap(); break;
@@ -155,6 +148,7 @@ void loop() {
 
     default: Serial.println("Something went horribly wrong");
   }
+  delay(100);
 }
 
 void SearchingForBeacon(int beacon) {
@@ -179,7 +173,7 @@ void SearchingForBeacon(int beacon) {
       return;
     }
   }
-  if (millis() - stuckTime > 4*ONE_SECOND) {
+  if (millis() - stuckTime > 7 * ONE_SECOND) {
     TurnLeft();
   } else {
     TurnRight();
@@ -209,7 +203,7 @@ void ReloadingTokens(void) {
 
 void GoingTowardsBalance(void) {
   Serial.println("Going towards Balance");
-  if ((TestForBumperHit(bumperPinTopCenter) || (TestForBumperHit(bumperPinTopRight) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopRight)))) {
+  if ((TestForBumperHit(bumperPinTopCenter) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopLeft)) || (TestForBumperHit(bumperPinTopCenter) && TestForBumperHit(bumperPinTopRight)))) {
     Stop();
     state = DUMPING_TOKENS_SERVO_UP;
   } else if (TestForBumperHit(bumperPinTopRight)) {
@@ -234,6 +228,7 @@ void GoingTowardsBalance(void) {
 void DumpingTokensServoUp(void) {
   Serial.println("Dumping tokens servo up");
   servo.write(SERVO_DOWN);
+  Stop();
   delay(DUMP_TIME);
   state = DUMPING_TOKENS_SERVO_DOWN;
 }
@@ -241,6 +236,7 @@ void DumpingTokensServoUp(void) {
 void DumpingTokensServoDown(void) {
   Serial.println("Dumping tokens servo down");
   servo.write(SERVO_UP);
+  Stop();
   delay(DUMP_TIME);
   GoBackwards();
   delay(REVERSE_TIME);
@@ -260,7 +256,7 @@ unsigned char TestForFLAPOrBalance(int pin) {
   if ((frequency > 4000) && (frequency < 6000)) {
     Serial.println("I see the FLAP");
     return FLAP;
-  } else if ((frequency > 800) && (frequency < 1200)) {
+  } else if ((frequency > 800) && (frequency < 1300)) {
     Serial.println("I see a balance!");
     return BALANCE;
   } else {
