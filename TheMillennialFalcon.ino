@@ -26,10 +26,10 @@
 /*----- Time Constants -----*/
 #define  ONE_SECOND             1000
 #define  TOTAL_TIME             120000UL
-#define  REVERSE_TIME           1000 // how long robot reverses when hits obstacle
-#define  TURN_TIME              150 // how long robot turns when hits obstacle
-#define  STOP_TIME              150 // how long robot stops once locates beacon
-#define  FOUND_TIME             500 // how long robot goes forward once finds beacon
+#define  REVERSE_TIME           800 // how long robot reverses when hits obstacle
+#define  TURN_TIME              100 // how long robot turns when hits obstacle
+#define  STOP_TIME              200 // how long robot stops once locates beacon
+#define  FOUND_TIME             1000 // how long robot goes forward once finds beacon
 #define  RELOAD_TIME            1.5*ONE_SECOND
 #define  DUMP_TIME              ONE_SECOND
 
@@ -80,7 +80,7 @@ int servoPin = 11;
 int motorPinDirLeft = 6;
 int motorPinEnLeft = 8;
 int motorPinDirRight = 3;
-int motorPinEnRight = 1;
+int motorPinEnRight = 14;
 
 int bumperPinTopRight = 5;
 int bumperPinTopLeft = 12;
@@ -94,14 +94,11 @@ int state = SEARCHING_FOR_BALANCE; // begin with 7 tokens
 /*----Other Variables-----*/
 int frequency = 0; // initialize frequency
 Servo servo;
-int leftHit = 0;
-int rightHit = 0;
-int centerHit = 0;
-int backLeftHit = 0;
-int backRightHit = 0;
 
 int startTime = 0;
 int stuckTime = 0;
+int flip = 0;
+int firstSearch = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -131,7 +128,6 @@ void setup() {
 }
 
 void loop() {
-//  TurnLeft();
   if (millis() - startTime >= TOTAL_TIME) {
     Serial.println("System off!");
     state = SYSTEM_OFF;
@@ -152,6 +148,30 @@ void loop() {
 }
 
 void SearchingForBeacon(int beacon) {
+  if (TestForBumperHit(bumperPinTopRight)) {
+    GoBackwards();
+    delay(REVERSE_TIME);
+    TurnRight();
+    delay(TURN_TIME);
+  }
+  if (TestForBumperHit(bumperPinTopLeft)) {
+    GoBackwards();
+    delay(REVERSE_TIME);
+    TurnLeft();
+    delay(TURN_TIME);
+  }
+  if (TestForBumperHit(bumperPinBottomRight)) {
+    GoForward();
+    delay(REVERSE_TIME);
+    TurnLeft();
+    delay(TURN_TIME);
+  }
+  if (TestForBumperHit(bumperPinBottomLeft)) {
+    GoForward();
+    delay(REVERSE_TIME);
+    TurnRight();
+    delay(TURN_TIME);
+  }
   if (beacon == FLAP) {
     Serial.println("Searching for Flap!");
     if (TestForFLAPOrBalance(IRPinBack) == beacon) {
@@ -162,6 +182,11 @@ void SearchingForBeacon(int beacon) {
       delay(FOUND_TIME);
       return;
     }
+//    if (flip) {
+      TurnRight();
+//    } else {
+//      TurnLeft();
+//    }
   } else if (beacon == BALANCE) {
     Serial.println("Searching for balance!");
     if (TestForFLAPOrBalance(IRPinFront) == beacon) {
@@ -172,12 +197,13 @@ void SearchingForBeacon(int beacon) {
       delay(FOUND_TIME);
       return;
     }
-  }
-  if (millis() - stuckTime > 7 * ONE_SECOND) {
-    TurnLeft();
-  } else {
+    //  if (millis() - stuckTime > 7 * ONE_SECOND) {
+    //    TurnLeft();
+    //  } else {
     TurnRight();
+    //  }
   }
+
 }
 
 void GoingTowardsFlap(void) {
@@ -189,6 +215,11 @@ void GoingTowardsFlap(void) {
     GoBackwards();
   } else {
     stuckTime = millis();
+    if (flip && !firstSearch) {
+      flip = 0;
+    } else {
+      flip = 1;
+    }
     state = SEARCHING_FOR_FLAP;
   }
 }
@@ -211,11 +242,19 @@ void GoingTowardsBalance(void) {
     delay(REVERSE_TIME);
     TurnRight();
     delay(TURN_TIME);
+    if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
+      GoForward();
+      delay(REVERSE_TIME);
+    }
   } else if (TestForBumperHit(bumperPinTopLeft)) {
     GoBackwards();
     delay(REVERSE_TIME);
     TurnLeft();
     delay(TURN_TIME);
+    if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
+      GoForward();
+      delay(REVERSE_TIME);
+    }
   }
   else if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
     GoForward();
@@ -241,7 +280,9 @@ void DumpingTokensServoDown(void) {
   GoBackwards();
   delay(REVERSE_TIME);
   stuckTime = millis();
+  flip = 0;
   state = SEARCHING_FOR_FLAP;
+  firstSearch = 1;
 }
 
 void SystemOff(void) {
