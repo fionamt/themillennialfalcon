@@ -96,9 +96,6 @@ int frequency = 0; // initialize frequency
 Servo servo;
 
 int startTime = 0;
-int stuckTime = 0;
-int flip = 0;
-int firstSearch = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -124,7 +121,6 @@ void setup() {
 
   // Start timer
   startTime = millis();
-  stuckTime = millis();
 }
 
 void loop() {
@@ -182,11 +178,7 @@ void SearchingForBeacon(int beacon) {
       delay(FOUND_TIME);
       return;
     }
-//    if (flip) {
-      TurnRight();
-//    } else {
-//      TurnLeft();
-//    }
+    TurnRight();
   } else if (beacon == BALANCE) {
     Serial.println("Searching for balance!");
     if (TestForFLAPOrBalance(IRPinFront) == beacon) {
@@ -197,11 +189,7 @@ void SearchingForBeacon(int beacon) {
       delay(FOUND_TIME);
       return;
     }
-    //  if (millis() - stuckTime > 7 * ONE_SECOND) {
-    //    TurnLeft();
-    //  } else {
     TurnRight();
-    //  }
   }
 
 }
@@ -214,12 +202,6 @@ void GoingTowardsFlap(void) {
   } else if (TestForFLAPOrBalance(IRPinBack) == FLAP) {
     GoBackwards();
   } else {
-    stuckTime = millis();
-    if (flip && !firstSearch) {
-      flip = 0;
-    } else {
-      flip = 1;
-    }
     state = SEARCHING_FOR_FLAP;
   }
 }
@@ -228,7 +210,6 @@ void ReloadingTokens(void) {
   Serial.println("Reloading Tokens");
   Stop();
   delay(RELOAD_TIME);
-  stuckTime = millis();
   state = SEARCHING_FOR_BALANCE;
 }
 
@@ -259,7 +240,6 @@ void GoingTowardsBalance(void) {
   else if (TestForFLAPOrBalance(IRPinFront) == BALANCE) {
     GoForward();
   } else {
-    stuckTime = millis();
     state = SEARCHING_FOR_BALANCE;
   }
 }
@@ -279,10 +259,7 @@ void DumpingTokensServoDown(void) {
   delay(DUMP_TIME);
   GoBackwards();
   delay(REVERSE_TIME);
-  stuckTime = millis();
-  flip = 0;
   state = SEARCHING_FOR_FLAP;
-  firstSearch = 1;
 }
 
 void SystemOff(void) {
