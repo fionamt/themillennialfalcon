@@ -64,12 +64,13 @@ info@company.com
         </div>
         <div class="navbar-collapse collapse" id="templatemo-nav-bar">
           <ul class="nav navbar-nav navbar-right" style="margin-top: 40px;">
-            <li class="active"><a href="#templatemo-top">HOME</a></li>
+            <li class="active"><a href="#templatemo-carousel">HOME</a></li>
             <li><a href="#templatemo-specs">SPECS</a></li>
             <li><a href="#templatemo-mechanical">MECHANICAL</a></li>
             <li><a href="#templatemo-electronics">ELECTRONICS</a></li>
             <li><a href="#templatemo-software">SOFTWARE</a></li>
             <li><a href="#templatemo-part">PARTS</a></li>
+            <li><a href="#templatemo-lesson">LESSONS</a></li>
             <li><a href="#templatemo-team">TEAM</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -86,6 +87,7 @@ info@company.com
       <li data-target="#templatemo-carousel" data-slide-to="0" class="active"></li>
       <li data-target="#templatemo-carousel" data-slide-to="1"></li>
       <li data-target="#templatemo-carousel" data-slide-to="2"></li>
+      <li data-target="#templatemo-carousel" data-slide-to="3"></li>
     </ol>
     <div class="carousel-inner">
       <div class="item active">
@@ -122,6 +124,20 @@ info@company.com
           </div>
         </div>
       </div>
+      <div class="item">
+        <div class="container">
+          <div class="carousel-caption">
+            <div class="col-sm-6 col-md-6">
+              <h1>"Don't worry, she'll hold together . . . You hear me, baby? Hold together!"</h1>
+              <p>Han Solo</p>
+            </div>
+            <div class="col-sm-6 col-md-6">
+              <h1>"She's the fastest hunk of junk in the galaxy." </h1>
+              <p>Lando Calrissian</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <a class="left carousel-control" href="#templatemo-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
     <a class="right carousel-control" href="#templatemo-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -139,6 +155,11 @@ info@company.com
 
 <div class="templatemo-service">
   <div class="container">
+    <div>
+      <p>It's pretty hard to stay the fastest ship in the galaxy and our Corellian ME-210 light freighter, the Millennial Falcon, isn't ready to be beat just yet. Kylo Ren has been upgrading his Imperial Fleet, but will it be enough to take on his father's resilient smuggler's ship?</p>
+      <p>Similar to the reknown Millennium Falcon, the Millennial Falcon looks a lot worse than it functions. The hot glue and duct tape is all part of the disguise though, because in reality, this ship is still the best smuggling vessel around. True to its name though, it often behaves as a moody teenager and refuses to comply with the rules of the challenge. </p>
+    </div>
+    <br>
     <div class="row">
       <div class="col-md-4">
         <div class="templatemo-service-item">
@@ -146,9 +167,9 @@ info@company.com
             <img src="images/walker.png" alt="icon" width="64"/>
             <span class="templatemo-service-item-header">MECHANICAL</span>
           </div>
-          <p>Mechanically, the Millennial Falcon had to drive around on a grid autonomously and dump tokens into specified bins.</p>
+          <p>Mechanically, the Millennial Falcon has to drive around on a grid autonomously and dump tokens into specified bins before its dark side opponent can do the same.</p>
           <div class="text-center">
-            <a href="#"
+            <a href="#templatemo-mechanical"
             class="templatemo-btn-read-more btn btn-orange">DETAILS</a>
           </div>
           <br class="clearfix"/>
@@ -162,9 +183,9 @@ info@company.com
             <img src="images/deathstar.png" alt="icon" width="64"/>
             <span class="templatemo-service-item-header">ELECTRONICS</span>
           </div>
-          <p>Electronically, the robot had to detect IR sensors at various frequencies and determine when it hit a wall or balance.</p>
+          <p>Electronically, the robot had to detect IR sensors at various frequencies and determine when it hit a wall or balance in its quest to save Han Solo.</p>
           <div class="text-center">
-            <a href="#"
+            <a href="#templatemo-electronics"
             class="templatemo-btn-read-more btn btn-orange">DETAILS</a>
           </div>
           <br class="clearfix"/>
@@ -178,9 +199,9 @@ info@company.com
             <img src="images/r2d2.png" alt="icon" width="64"/>
             <span class="templatemo-service-item-header">SOFTWARE</span>
           </div>
-          <p>As an autonomous robot, The Millennial Falcon had to respond to changes in state depending on its sensor readouts.</p>
+          <p>As an autonomous robot, The Millennial Falcon had to respond to changes in state depending on its sensor readouts because it can't rely on Chewbacca to fly it anymore.</p>
           <div class="text-center">
-            <a href="#"
+            <a href="#templatemo-software"
             class="templatemo-btn-read-more btn btn-orange">DETAILS</a>
           </div>
           <br class="clearfix"/>
@@ -210,25 +231,22 @@ info@company.com
     <p>The project challenge was to load up to 12 tokens (poker chips) into seesaw-like devices - "Force Balances". The playing field was divided in half (the "Light Side" and the "Dark Side"), and each robot started on one side. Each side consisted of a region in which players could hand tokens to their robots, called the FLAP, and one side of five Force Balances in the center field. There were two ways to win: by tipping every Force Balance to your side first, or by tipping at least 3 balances to your side (a majority) by the end of the 2-minute round. There is a clever backstory based on The Force Awakens which you can read in the official document.</p>
   </br>
 
-<p>Some major rules for the game: </p>
-<li> Every robot can come preloaded with 7 tokens </li>
-<li> Every robot should fit on an 11” by 11” square </li>
-<li> Extra tokens can be placed in the loading zone (FLAP), but at least part of the robot must be inside the zone </li>
-<li> The robots must stop after two minutes </li>
-<li> No team could spend more than $200 </li>
+  <p>Some major rules for the game: </p>
+  <li> Every robot can come preloaded with 7 tokens. </li>
+  <li> Every robot should fit on an 11” by 11” square and have a height of less than 12". </li>
+  <li> Up to 12 additional tokens can be placed in the loading zone (FLAP), but at least part of the robot must be inside the zone. </li>
+  <li> The robot must stop after two minutes. </li>
+  <li> No team could spend more than $200. </li>
 </br>
 <p> In order to help us with the task, the field designers gave us two major features to help align ourselves: </p>
 <li> The FLAP, as well as each of the token dispensers, had an IR beacon mounted on them. The FLAP’s beacon was 5 kHz infrared, while the balance beacons were all 1 kHz. The balance beacons would also only be activated if the balance was not tipped in the robot’s favor. </li>
 <li> In addition, there was non-reflective tape, placed in a T shape with the base at the front end of the FLAP and spanning across each of the Force Balances, so the robot could have a path to follow from the FLAP to each balance. The outside of the FLAP was also marked with reflective tape. </li>
 </p>
-    <div class="subheader">
-      Field Setup
-    </div>
-    <img class="img-responsive" src="images/game_setup.png"  alt="game board" width="600"/>
-    <div class="subheader">
-      Our Strategy
-    </div>
-  </div>
+<div class="subheader">
+  Field Setup
+</div>
+<img class="img-responsive" src="images/game_setup.png"  alt="game board" width="600"/>
+</div>
 </div>
 
 <div id="templatemo-portfolio" >
@@ -252,7 +270,7 @@ info@company.com
     <div class="clearfix"></div>
     <div class="text-center">
       <ul class="templatemo-project-gallery" >
-        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-electronics" >
+        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-mechanical" >
           <a class="colorbox" href="images/full-gallery-image-1.jpg" data-group="gallery-mechanical">
             <div class="templatemo-project-box">
 
@@ -267,54 +285,54 @@ info@company.com
           </a>
         </li>
         <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-team" >
-          <a class="colorbox" href="images/full-gallery-image-2.jpg" data-group="gallery-team">
+          <a class="colorbox" href="images/T16_1.png" data-group="gallery-team">
             <div class="templatemo-project-box">
-              <img src="images/gallery-image-2.jpg" class="img-responsive" alt="gallery" />
+              <img src="images/T16_1.png" class="img-responsive" alt="gallery" />
               <div class="project-overlay">
-                <h5>Creative</h5>
+                <h5>Team</h5>
                 <hr />
-                <h4>BREAKFAST</h4>
+                <h4>COMPETITION</h4>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-electronics" >
+          <a class="colorbox" href="images/20160309_203308.jpg" data-group="gallery-electronics">
+            <div class="templatemo-project-box">
+              <img src="images/20160309_203308.jpg" class="img-responsive" alt="gallery" />
+              <div class="project-overlay">
+                <h5>Electronics</h5>
+                <hr />
+                <h4>REGULATOR</h4>
               </div>
             </div>
           </a>
         </li>
         <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-software" >
-          <a class="colorbox" href="images/full-gallery-image-3.jpg" data-group="gallery-software">
+          <a class="colorbox" href="images/StateDiagram_final.png" data-group="gallery-software">
             <div class="templatemo-project-box">
-              <img src="images/gallery-image-3.jpg" class="img-responsive" alt="gallery" />
+              <img src="images/StateDiagram_final.png" class="img-responsive" alt="gallery" />
               <div class="project-overlay">
-                <h5>Inspiration</h5>
+                <h5>Software</h5>
                 <hr />
-                <h4>GREEN COLORS</h4>
+                <h4>STATE DIAGRAM</h4>
               </div>
             </div>
           </a>
         </li>
-        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-mechanical" >
-          <a class="colorbox" href="images/full-gallery-image-4.jpg" data-group="gallery-mechanical">
+        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-electronics" >
+          <a class="colorbox" href="images/IMG_2138.JPG" data-group="gallery-electronics">
             <div class="templatemo-project-box">
-              <img src="images/gallery-image-4.jpg" class="img-responsive" alt="gallery" />
+              <img src="images/IMG_2138.JPG" class="img-responsive" alt="gallery" />
               <div class="project-overlay">
-                <h5>Web Design</h5>
+                <h5>Electronics</h5>
                 <hr />
-                <h4>CAMERA</h4>
+                <h4>IR SENSOR</h4>
               </div>
             </div>
           </a>
         </li>
-        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-software" >
-          <a class="colorbox" href="images/full-gallery-image-5.jpg" data-group="gallery-software">
-            <div class="templatemo-project-box">
-              <img src="images/gallery-image-5.jpg" class="img-responsive" alt="gallery" />
-              <div class="project-overlay">
-                <h5>Inspiration</h5>
-                <hr />
-                <h4>PLANT</h4>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-software" >
+        <li class="col-lg-2 col-md-2 col-sm-2  gallery gallery-electronics" >
           <a class="colorbox" href="images/full-gallery-image-6.jpg" data-group="gallery-electronics">
             <div class="templatemo-project-box">
               <img src="images/gallery-image-6.jpg" class="img-responsive" alt="gallery" />
@@ -327,20 +345,20 @@ info@company.com
           </a>
         </li>
 
-        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-mechanical" >
-          <a class="colorbox" href="images/full-gallery-image-7.jpg" data-group="gallery-mechanical">
+        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-team" >
+          <a class="colorbox" href="images/TeamPhoto.png" data-group="gallery-team">
             <div class="templatemo-project-box">
-              <img src="images/gallery-image-7.jpg" class="img-responsive" alt="gallery" />
+              <img src="images/TeamPhoto.png" class="img-responsive" alt="gallery" />
               <div class="project-overlay">
-                <h5>Web Design</h5>
+                <h5>Team</h5>
                 <hr />
-                <h4>CITY</h4>
+                <h4>INTRODUCTION</h4>
               </div>
             </div>
           </a>
         </li>
 
-        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-team" >
+        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-mechanical" >
           <a class="colorbox" href="images/full-gallery-image-8.jpg" data-group="gallery-mechanical">
             <div class="templatemo-project-box">
               <img src="images/gallery-image-8.jpg" class="img-responsive" alt="gallery" />
@@ -353,27 +371,53 @@ info@company.com
           </a>
         </li>
 
-        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-electronics" >
-          <a class="colorbox" href="images/full-gallery-image-9.jpg" data-group="gallery-electronics">
+        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-mechanical" >
+          <a class="colorbox" href="images/IMG_2125.JPG" data-group="gallery-mechanical">
             <div class="templatemo-project-box">
-              <img src="images/gallery-image-9.jpg" class="img-responsive" alt="gallery" />
+              <img src="images/IMG_2125.JPG" class="img-responsive" alt="gallery" />
               <div class="project-overlay">
-                <h5>Graphic</h5>
+                <h5>Mechanical</h5>
                 <hr />
-                <h4>NATURE</h4>
+                <h4>BUMPER</h4>
               </div>
             </div>
           </a>
         </li>
 
-        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-software" >
-          <a class="colorbox" href="images/full-gallery-image-10.jpg" data-group="gallery-software">
+        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-electronics" >
+          <a class="colorbox" href="images/20160309_203539.jpg" data-group="gallery-electronics">
             <div class="templatemo-project-box">
-              <img src="images/gallery-image-10.jpg" class="img-responsive" alt="gallery" />
+              <img src="images/20160309_203539.jpg" class="img-responsive" alt="gallery" />
               <div class="project-overlay">
-                <h5>Inspiration</h5>
+                <h5>Electronics</h5>
                 <hr />
-                <h4>DOGGY</h4>
+                <h4>LIMIT SWITCH</h4>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-team" >
+          <a class="colorbox" href="images/teampicture.png" data-group="gallery-team">
+            <div class="templatemo-project-box">
+              <img src="images/teampicture.png" class="img-responsive" alt="gallery" />
+              <div class="project-overlay">
+                <h5>Team</h5>
+                <hr />
+                <h4>COMPETITION</h4>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="col-lg-2 col-md-2 col-sm-2 gallery gallery-mechanical" >
+          <a class="colorbox" href="images/IMG_2126.JPG" data-group="gallery-mechanical">
+            <div class="templatemo-project-box">
+              <img src="images/IMG_2126.JPG" class="img-responsive" alt="gallery" />
+              <div class="project-overlay">
+                <h5>Mechanical</h5>
+                <hr />
+                <h4>MOTOR</h4>
               </div>
             </div>
           </a>
@@ -381,11 +425,11 @@ info@company.com
 
       </ul><!-- /.gallery -->
     </div>
-    <div class="clearfix"></div>
-    <div class="row text-center">
-      <a class="btn_loadmore btn btn-lg btn-orange" href="#" role="button">LOAD MORE</a>
-    </div>
-  </div><!-- /.container -->
+    <!-- <div class="clearfix"></div> -->
+    <!-- <div class="row text-center">
+    <a class="btn_loadmore btn btn-lg btn-orange" href="#" role="button">LOAD MORE</a>
+  </div> -->
+</div><!-- /.container -->
 </div> <!-- /.templatemo-portfolio -->
 
 <div id="templatemo-mechanical">
@@ -399,292 +443,309 @@ info@company.com
       </div>
       <br class="clearfix"/>
     </div>
-</div>
+    <p>Our original design consisted of 3 circular 11-inch duron plates, with holes cut out for mass reduction and internal wiring between platforms. We chose a circular design to provide functionality from multiple angles. The circular platforms were supported with threaded steel rods and were held in position with washers and nuts.</p>
+    <br>
+    <p>We soon realized that we would need a way for the Millennial Falcon to recognize when it hit something, since it wouldn't have a pilot for this challenge. We decided to use limit switches; however, limit switches are small and we would need far too many to account for every orientation in which the Millennial Falcon could crash. Because of this, we decided to use bumpers, which would engage the limit switches when they were hit. Since we decided to use bumpers, we shrank the radius of the plates to 9 inches so that our robot would not exceed the size limit. In addition to resizing out platforms, we also changed the shape of the holes cut out of the platform to be more suited to our electronics.</p>
+    <div class="subheader">
+      Bumper Design
+    </div>
+    <p>Our design contains two bumpers (front and back) which use in total 5 limit switches. The back bumper consists of two limit switches each connected to an acrylic bumper. The purpose of this bumper was to let the Millennial Falcon know when it has hit the FLAP.</p>
+    <p>The front bumper consists of three limit switches. The middle limit switch is suspended from the robot with duron supports. When two of these switches or just the middle switch are pressed, the robot would stop and dump tokens into a bucket. When just one side switch is pressed, the robot would reverse and turn to correct its location to try to align with the bucket. Again, these switches were connected to acrylic bumpers to maximize the range of impact.</p>
+    <img src="images/IMG_2125.JPG" alt="Limit Switch" style="height:200px">
+    <div class="subheader">
+      Token Dispenser
+    </div>
+    <p>We used a servo motor and a dumping strategy to dispense tokens. We attached two clear acrylic tubes with a diameter of 2" to a duron shaft using duron supports and a tension band. We attached the duron shaft to the servo with hot glue and another duron doughnut.</p>
+    <p>The servo motor was connected to the top platform with duron pieces, screws and hot glue.</p>
+    <img src="images/IMG_2116.JPG" alt="Token Top" style="width:304px;height:228px;">
+    <img src="images/IMG_2118.JPG" alt="Token Top" style="width:304px;height:228px;">
+    <div class="subheader">
+      Drive System
+    </div>
+    <p>Since we needed power and not necessarily step accuracy, we settled on using DC motors for our drive syste. We used two 80mm inline skate wheels attached to separate DC motors to drive the Millennial Falcon. We found these wheels to be the most reliable method, and much cheaper than Omni-wheels, for zipping around the galaxy and dispensing tokens. This way, the Falcon could control the wheels independently and turn quickly in one place. To support the Falcon, which couldn't balance on two wheels alone, we added two casters for smooth driving.</p>
+    <img src="images/IMG_2124.JPG" alt="Token Top" style="width:304px;height:228px;">
+    <img src="images/20160309_203518.jpg" alt="Token Top" style="width:304px;height:228px;">
+    <div class="subheader">
+      Unique Additions
+    </div>
+    <p>We used small lasercut pieces of duron to hold the batteries steady on the bottom platform. We also used small lasercut pieces of duron to support the motor shaft and the motors so that they could be properly aligned with the wheels.</p>
+    <img src="images/IMG_2126.JPG" alt="Token Top" style="width:304px;height:228px;">
+    <p>The IR sensors that we used to detect the beacons and the FLAP were too sensitive and were picking up false signals in the testing arena (from the reflective material on the floor). To combat this we used cylindrical collimators (i.e. straws cover with black tape) to reduce the amount of stray light that was reaching the phototransistors. We cut out a notch in one of the back collimators in order to increase the signal received from the FLAP.</p>
+    <img src="images/IMG_2138.JPG" alt="Token Top" style="width:304px;height:228px;">
+  </div>
 
-<div id="templatemo-electronics">
-  <div class="container">
-    <div class="row">
-      <div class="templatemo-line-header" style="margin-top: 0px;" >
-        <div class="text-center">
-          <hr class="team_hr team_hr_left hr_gray"/><span class="span_blog txt_darkgrey">ELECTRONICS</span>
+  <div id="templatemo-electronics">
+    <div class="container">
+      <div class="row">
+        <div class="templatemo-line-header" style="margin-top: 0px;" >
+          <div class="text-center">
+            <hr class="team_hr team_hr_left hr_gray"/><span class="span_blog txt_darkgrey">ELECTRONICS</span>
 
 
-          <hr class="team_hr team_hr_right hr_gray" />
+            <hr class="team_hr team_hr_right hr_gray" />
+          </div>
         </div>
+        <br class="clearfix"/>
       </div>
-     <br class="clearfix"/>
-   </br>
-      <p> The circuit output for our robot consisted of three major components: the digital logic, motor output, and power control. The digital logic was powered by the Arduino, which itself was powered by the 12V regulator attached to the two 7.2 (3-cell) batteries. Our electronic logic components consisted of five limit switches (connected directly to the Arduino) and two IR sensor (connected to an omp amps and sent through a comparator to create a duty cycle matching the beacon frequency). The two motors were both controlled by two half-H-bridges (one-half of the L293 motor controller), which allowed reversible control of the wheels. Between the logic and motor grounds, a 3A fuse and a kill switch were attached in order to prevent important circuitry from blowing up. </p>
+      <p> The circuit output for the Millennial Falcon consisted of three major components: the digital logic, motor output, and power control. The digital logic was powered by the Arduino, which itself was powered by the 12V regulator attached to the two 7.2 (3-cell) NiMH batteries. Our electronic logic components consisted of five limit switches (connected directly to the Arduino) and two IR sensor (connected to an omp amps and sent through a comparator to create a duty cycle matching the beacon frequency). The two motors were both controlled by two half-H-bridges (one-half of the L293 motor controller), which allowed reversible control of the wheels. Between the logic and motor grounds, a 3A fuse and a kill switch were attached in order to prevent important circuitry from blowing up. </p>
+      <div class="subheader">
+        Voltage Regulator
+      </div>
+      <p>We used a 12V and 5V voltage regulator to control the power input from two 7.2V NiMH batteries to our various components. We also added a 3A fuse to protect our circuit, which saved us when we short circuited during testing, and a kill switch for easy control of the power. This way, if the Falcon started getting angsty, we could cut the power and give it some time to reflect on its poor behavior.</p>
+      <img src="images/Regulator.png" alt="Voltage Regulator" style="width:500px">
+      <br>
+      <img src="images/20160309_203618.jpg" alt="Voltage Regulator" style="width:304px">
+      <img src="images/20160309_203308.jpg" alt="Voltage Regulator" style="width:304px">
 
+      <div class="subheader">
+        DC Motor
+      </div>
+<p>To determine appropriate DC motors, we did some back-of-the-envelope calculations for motor torque using mass values of robots from past years.</p>
+<img src="images/motor_calc.png" alt="Voltage Regulator" style="width:304px">
+
+      <p>Based on the approximate torque required and the maximum voltage of each   battery, we are looking for a motor that can produce at least 800 g-cm of torque and be supplied by 6-12 V. We therefore used two Jameco 161382 DC motors to power the Falcon. These were attached to two 80mm inline skate wheels. While not quite the hyperdrive it's accustomed to, these motors gave the Falcon the ability to do some quick, stationary turns by spinning the wheels in opposite directions. </p>
+      <img src="images/DC_Motor.png" alt="DC Motor" style="width:500px">
+      <br>
+      <img src="images/IMG_2124.JPG" alt="DC Motor" style="width:304px">
+      <img src="images/IMG_2123.JPG" alt="DC Motor" style="width:304px">
+
+      <div class="subheader">
+        Servo
+      </div>
+<p>Because our robot uses a hinge arm to deploy tokens, we decided a servo motor would provide the necessary control, as we need maximum 180 degrees of rotation.</p>
+<img src="images/servo_calc.png" alt="Voltage Regulator" style="width:150px">
+      <p>The maximum torque we need is 5.4 N-cm. Based on this, we selected the Hitec 33485S Deluxe HS-485HB Servo. At 0 degrees, the tokens were secured on the robot top platform. When the limit switches were hit, the servo moved to a 120 degree orientation to dump the tokens into the balance, an angle we found through testing various ones from 90 degrees to 180 degrees.</p>
+      <img src="images/Servo.png" alt="Servo" style="width:304px">
+      <br>
+      <img src="images/IMG_2117.JPG" alt="Servo" style="width:304px">
+
+      <div class="subheader">
+        Limit Switches
+      </div>
+      <p>We first used two limit switches and only detected when The Millennial Falcon hit objects in the front. We soon realized it would be much more efficient to additionally have two limit switches in the back at the lowest tier to sense when the robot hit the FLAP beacon. We also added a switch to the middle front of the robot to detect when we were right in front of a balance to dump accurately. While the Falcon misbehaved often and frequently scattered tokens on the floor, giving it greater vision by increasing the number of bumpers definitely helped its orientation.</p>
+<p>
+      <img src="images/LimitSwitch.png" alt="Limit Switch" style="width:304px">
+      <br>
+      <img src="images/IMG_2125.JPG" alt="Limit Switch" style="height:200px">
+      <img src="images/20160309_203539.jpg" alt="Limit Switch" style="height:200px">
+
+      <div class="subheader">
+        IR Sensors
+      </div>
+      <p>Initially, we planned to use 4 IR sensors, two on the front and two on the back. We had planned to use these pairs to hone in on each signal, the front would locate the balances and the back the FLAP. However, after testing, we realized that it was not useful to have two on each side, since they both detect the same signals, and chose instead to have one IR sensor in the front and in the back, since these were sensitive enough. We used a darkened cylindrical cover to pinpoint the signal.</p>
+<p>Our IR sensors went through two amplification stages with low pass filters to reduce noise separated by a high pass filter. This signal then went through a comparator with hysteresis before being sent to the Arduino. In our testing, we could easily detect beacons from over 5 feet away, well over the required field size.</p>
+      <img src="images/IRSensor.png" alt="IR Sensor" style="width:600px">
+      <br>
+      <img src="images/20160309_203437.JPG" alt="Limit Switch" style="height:200px">
+      <img src="images/20160309_203503.JPG" alt="Limit Switch" style="height:200px">
     </div>
   </div>
-</div>
 
-<div id="templatemo-software">
-  <div class="container">
-    <div class="row">
-      <div class="templatemo-line-header" style="margin-top: 0px;" >
-        <div class="text-center">
-          <hr class="team_hr team_hr_left hr_gray"/><span class="span_blog txt_darkgrey">SOFTWARE</span>
-          <hr class="team_hr team_hr_right hr_gray" />
+  <div id="templatemo-software">
+    <div class="container">
+      <div class="row">
+        <div class="templatemo-line-header" style="margin-top: 0px;" >
+          <div class="text-center">
+            <hr class="team_hr team_hr_left hr_gray"/><span class="span_blog txt_darkgrey">SOFTWARE</span>
+            <hr class="team_hr team_hr_right hr_gray" />
+          </div>
         </div>
+        <br class="clearfix"/>
       </div>
-      <br class="clearfix"/>
+      <p>Our main strategy was to aim for simplicity, integrating as few sensors as possible and relying on code and timers. This would allow a more failsafe robot, especially considering the Falcon's angsty personality and because electronic equipment can malfunction or just not work as desired. The state diagram of the Falcon is shown below, but the basic logic flow goes as follows:</p>
+      <ol type="1">
+        <li>The IR sensor searches for a balance to be tipped (i.e. one with an active beacon).</li>
+        <li>The robot will go toward the balance until it hits the center limit switch. If the side limit switches are pressed, the robot will try to align itself toward to face forward.</li>
+        <li>Once the center limit switch is pressed, the robot arm will dump its contents into the bin.</li>
+        <li>When the payload is dumped, the arm will lift back up, the robot will back up, then turn right, searching for the FLAP (1 kHz) beacon.</li>
+        <li>Once it finds the beacon, it will keep backing up until one or both of the back limit switches are pressed.</li>
+      </ol>
+      <p>Our actual code can be found <a href="docs/Arduino_Code_TheMillennialFalcon.pdf">here</a> or on <a href="https://github.com/fionamt/themillennialfalcon">Github</a>.</p>
+      <br>
+      <img src="images/StateDiagram_final.png" alt="State Diagram" style="width:900px">
     </div>
   </div>
-</div>
 
-<div id="templatemo-part">
-  <div class="container">
-    <div class="row">
-      <div class="templatemo-line-header" style="margin-top: 0px;" >
-        <div class="text-center">
-          <hr class="team_hr parts_hr_left hr_gray"/><span class="span_blog txt_darkgrey">PARTS AND MATERIALS </span>
-          <hr class="team_hr mech_hr_right hr_gray" />
+  <div id="templatemo-part">
+    <div class="container">
+      <div class="row">
+        <div class="templatemo-line-header" style="margin-top: 0px;" >
+          <div class="text-center">
+            <hr class="team_hr parts_hr_left hr_gray"/><span class="span_blog txt_darkgrey">PARTS AND MATERIALS </span>
+            <hr class="team_hr mech_hr_right hr_gray" />
+          </div>
         </div>
+        <br class="clearfix"/>
       </div>
-      <br class="clearfix"/>
+      <p>We purchased our parts and materials from Jameco (DC motors), Home Depot and Ace Hardware (threaded rods, nuts, washers), Fry's (breadboards, limit switches), and the ME210 lab.</p>
+      <img src="images/parts.png" alt="Parts List" style="width:400px">
+      <p>Components marked as $0.00 were included in our ME210 Lab Kit that we purchased for $50 at the beginning of the quarter.</p>
     </div>
   </div>
-</div>
 
-<div class="templatemo-team" id="templatemo-team">
-  <div class="container">
-    <div class="row">
-      <div class="templatemo-line-header">
-        <div class="text-center">
-          <hr class="team_hr team_hr_left"/><span>MEET OUR TEAM</span>
-          <hr class="team_hr team_hr_right" />
+  <div id="templatemo-lesson">
+    <div class="container">
+      <div class="row">
+        <div class="templatemo-line-header" style="margin-top: 0px;" >
+          <div class="text-center">
+            <hr class="team_hr parts_hr_left hr_gray"/><span class="span_blog txt_darkgrey">LESSONS LEARNED </span>
+            <hr class="team_hr mech_hr_right hr_gray" />
+          </div>
         </div>
+        <br class="clearfix"/>
+      </div>
+      <div class="subheader">
+        Some of our biggest takeaways: </div>
+        <br>
+        <ol type="1">
+          <li><strong>Hot glue can be your best friend and your worst enemy.</strong> It’s incredibly useful to secure components into a breadboard that you are going to attach to the bottom side of a tier or to attach a platform for a limit switch, until you realize that your circuit isn’t working or that you don’t want to use that limit switch.</li>
+          <li><strong>Start early. Debugging is going to take longer than you think.</strong> We often felt like we were moving one step forward and two steps back. Many problems arose that we hadn’t considered, like getting stuck. Multiple iterations (if possible) are key.</li>
+          <li><strong>Code should not be an afterthought.</strong> We did not have enough time to add complexity (i.e. dealing with getting stuck) and test our code on the physical robot. </li>
+          <li><strong>Oscilloscopes are a starship's best friend.</strong> Since none of our team members had much experience with electronics, we relied heavily on oscilloscopes to debug our electronics. </li>
+          <li><strong>Robots tend to work best at 5am.</strong> Our robot pretty much was built through a series of all-nighters. </li>
+          <li><strong>The Millennial Falcon suffers incredible performance anxiety.</strong> The Falcon generally works unless a TA, professor, or other members of the Jedi Order or the Sith was present. </li>
+        </ol>
       </div>
     </div>
-    <div class="clearfix"> </div>
-    <ul class="row row_team">
-      <li class="col-lg-3 col-md-3 col-sm-6 ">
-        <div class="text-center">
-          <div class="member-thumb">
-            <img src="images/member1.png" class="img-responsive" alt="member 1" />
-            <div class="thumb-overlay">
-              <a href="#"><span class="social-icon-fb"></span></a>
-              <a href="#"><span class="social-icon-twitter"></span></a>
-              <a href="#"><span class="social-icon-linkedin"></span></a>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="templatemo-team" id="templatemo-team">
+      <div class="container">
+        <div class="row">
+          <div class="templatemo-line-header">
+            <div class="text-center">
+              <hr class="team_hr team_hr_left"/><span>MEET OUR TEAM</span>
+              <hr class="team_hr team_hr_right" />
             </div>
           </div>
-          <div class="team-inner">
-            <p class="team-inner-header">MIA</p>
-            <p class="team-inner-subtext">Mechanical Engineer</p>
-          </div>
         </div>
-      </li>
-      <li class="col-lg-3 col-md-3 col-sm-6 ">
-        <div class="text-center">
-          <div class="member-thumb">
-            <img src="images/member3.jpg" class="img-responsive" alt="member 2" />
-            <div class="thumb-overlay">
-              <a href="#"><span class="social-icon-fb"></span></a>
-              <a href="#"><span class="social-icon-twitter"></span></a>
-              <a href="#"><span class="social-icon-linkedin"></span></a>
+        <div class="clearfix"> </div>
+        <ul class="row row_team">
+          <li class="col-lg-3 col-md-3 col-sm-6 ">
+            <div class="text-center">
+              <div class="member-thumb">
+                <img src="images/member1.png" class="img-responsive" alt="member 1" width="250px"/>
+                <div class="thumb-overlay">
+                  <a href="https://www.linkedin.com/in/mia-hutchinson-628577107"><span class="social-icon-linkedin"></span></a>
+                  <a href="mailto:hutch16@stanford.edu"><span class="social-icon-email"></span></a>
+                </div>
+              </div>
+              <div class="team-inner">
+                <p class="team-inner-header">MIA HUTCHINSON</p>
+                <p class="team-inner-subtext">Mechanical Engineer</p>
+                <p class="team-inner-name">Princess LeiserCutter</p>
+              </div>
             </div>
-          </div>
-          <div class="team-inner">
-            <p class="team-inner-header">MOLLY</p>
-            <p class="team-inner-subtext">Mechanical Engineer</p>
-          </div>
-        </div>
-      </li>
-      <li class="col-lg-3 col-md-3 col-sm-6 ">
-        <div class="text-center">
-          <div class="member-thumb">
-            <img src="images/member2.jpg" class="img-responsive" alt="member 3" />
-            <div class="thumb-overlay">
-              <a href="#"><span class="social-icon-fb"></span></a>
-              <a href="#"><span class="social-icon-twitter"></span></a>
-              <a href="#"><span class="social-icon-linkedin"></span></a>
+          </li>
+          <li class="col-lg-3 col-md-3 col-sm-6 ">
+            <div class="text-center">
+              <div class="member-thumb">
+                <img src="images/member3.jpg" class="img-responsive" alt="member 2" width="250px"/>
+                <div class="thumb-overlay">
+                  <a href="#"><span class="social-icon-linkedin"></span></a>
+                  <a href="#"><span class="social-icon-email"></span></a>
+                </div>
+              </div>
+              <div class="team-inner">
+                <p class="team-inner-header">MOLLY DICKE</p>
+                <p class="team-inner-subtext">Mechanical Engineer</p>
+                <p class="team-inner-name">Hans Solder</p>
+              </div>
             </div>
-          </div>
-          <div class="team-inner">
-            <p class="team-inner-header">FIONA</p>
-            <p class="team-inner-subtext">Mechanical Engineer</p>
-          </div>
-        </div>
-      </li>
-      <li class="col-lg-3 col-md-3 col-sm-6 ">
-        <div class="text-center">
-          <div class="member-thumb">
-            <img src="images/member4.jpg" class="img-responsive" alt="member 4" />
-            <div class="thumb-overlay">
-              <a href="#"><span class="social-icon-fb"></span></a>
-              <a href="#"><span class="social-icon-twitter"></span></a>
-              <a href="#"><span class="social-icon-linkedin"></span></a>
+          </li>
+          <li class="col-lg-3 col-md-3 col-sm-6 ">
+            <div class="text-center">
+              <div class="member-thumb">
+                <img src="images/member2.jpg" class="img-responsive" alt="member 3" width="250px"/>
+                <div class="thumb-overlay">
+                  <!-- <a href="#"><span class="social-icon-fb"></span></a> -->
+                  <!-- <a href="#"><span class="social-icon-twitter"></span></a> -->
+                  <a href="https://www.linkedin.com/in/fionamt"><span class="social-icon-linkedin"></span></a>
+                  <a href="mailto:fionamt@stanford.edu"><span class="social-icon-email"></span></a>
+                </div>
+              </div>
+              <div class="team-inner">
+                <p class="team-inner-header">FIONA MEYER-TERUEL</p>
+                <p class="team-inner-subtext">Mechanical Engineer</p>
+                <p class="team-inner-name">Darth Voltage</p>
+              </div>
             </div>
-          </div>
-          <div class="team-inner">
-            <p class="team-inner-header">TJ</p>
-            <p class="team-inner-subtext">Computer Science</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div><!-- /.templatemo-team -->
-
-<!-- <div id="templatemo-contact">
-<div class="container">
-<div class="row">
-<div class="templatemo-line-header head_contact">
-<div class="text-center">
-<hr class="team_hr team_hr_left hr_gray"/><span class="txt_darkgrey">CONTACT US</span>
-<hr class="team_hr team_hr_right hr_gray"/>
-</div>
-</div>
-
-<div class="col-md-8">
-<div class="templatemo-contact-map" id="map-canvas"> </div>
-<div class="clearfix"></div>
-<i>You can find us on 80 Dagon Studio, Yankin Street, <span class="txt_orange">Digital Estate</span> in Yangon.</i>
-</div>
-<div class="col-md-4 contact_right">
-<p>Lorem ipsum dolor sit amet, consectetu adipiscing elit pendisse as a molesti.</p>
-<p><img src="images/location.png" alt="icon 1" /> 80 Dagon Studio, Yakin Street, Digital Estate</p>
-<p><img src="images/phone1.png"  alt="icon 2" /> 090-080-0110</p>
-<p><img src="images/globe.png" alt="icon 3" /><a class="link_orange" href="#"><span class="txt_orange">www.company.com</span></a></p>
-<form class="form-horizontal" action="#">
-<div class="form-group">
-<input type="email" class="form-control" placeholder="Your Name..." maxlength="40" />
-</div>
-<div class="form-group">
-<input type="email" class="form-control" placeholder="Your Email..." maxlength="40" />
-</div>
-<div class="form-group">
-<textarea  class="form-control" style="height: 130px;" placeholder="Write down your message..."></textarea>
-</div>
-<button type="submit" class="btn btn-orange pull-right">SEND</button>
-</form>
-
-</div>
-</div>
-</div>
-</div> -->
-
-<!-- /#templatemo-contact -->
-
-<!--
-<div class="templatemo-tweets">
-<div class="container">
-<div class="row" style="margin-top:20px;">
-<div class="col-md-2">
-</div>
-<div class="col-md-1">
-<img src="images/quote.png" alt="icon" />
-</div>
-<div class="col-md-7 tweet_txt" >
-<span>Lorem ipsum dolor sit amet, consectetur adipiscing elit suspendiise as a molesti neque vestibulum,  persiutsor de andues mare fricilus ipsum dolor sit amet cons forukus.</span>
-<br/>
-<span class="twitter_user">Moe Moe, Yangon</span>
-</div>
-<div class="col-md-2">
-</div>
-</div>
-</div>
-</div>
-
-<div class="templatemo-partners" >
-<div class="container">
-<div class="row">
-
-
-<div class="templatemo-line-header" >
-<div class="text-center">
-<hr class="team_hr team_hr_left hr_gray"/><span class="txt_darkgrey">OUR PARTNERS</span>
-<hr class="team_hr team_hr_right hr_gray" />
-</div>
-</div>
-<div class="clearfix"></div>
-
-
-<div class="text-center">
-
-<div style="margin-top:60px;">
-<ul class="list-inline">
-<li class="col-sm-2 col-md-2 templatemo-partner-item">
-<a href="#"><img src="images/partner1.jpg" class="img-responsive" alt="partner 1" /></a>
-</li>
-<li class="col-sm-2 col-md-2 templatemo-partner-item">
-<a href="#"><img src="images/partner2.jpg" class="img-responsive" alt="partner 2" /></a>
-</li>
-<li class="col-sm-2 col-md-2 templatemo-partner-item">
-<a href="#"><img src="images/partner3.jpg" class="img-responsive" alt="partner 3" /></a>
-</li>
-<li class="col-sm-2 col-md-2 templatemo-partner-item">
-<a href="#"><img src="images/partner4.jpg" class="img-responsive" alt="partner 4" /></a>
-</li>
-<li class="col-sm-2 col-md-2 templatemo-partner-item">
-<a href="#"><img src="images/partner5.jpg" class="img-responsive" alt="partner 5" /></a>
-</li>
-<li class="col-sm-2 col-md-2 templatemo-partner-item">
-<a href="#"><img src="images/partner6.jpg" class="img-responsive" alt="partner 6" /></a>
-</li>
-</ul>
-
-</div>
-
-</div>
-</div>
-</div>
-</div> -->
-
-
-<div class="templatemo-footer" >
-  <div class="container">
-    <div class="row">
-      <div class="text-center">
-
-        <div class="footer_container">
-          <ul class="list-inline">
-            <li>
-              <a href="#">
-                <span class="social-icon-fb"></span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="social-icon-rss"></span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="social-icon-twitter"></span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="social-icon-linkedin"></span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="social-icon-dribbble"></span>
-              </a>
-            </li>
-          </ul>
-          <div class="height30"></div>
-          <a class="btn btn-lg btn-orange" href="#" role="button" id="btn-back-to-top">Back To Top</a>
-          <div class="height30"></div>
-        </div>
-        <div class="footer_bottom_content">
-          <span id="footer-line">Created March 2016 <a href="#">ME210 Team 16</a></span>
-        </div>
-
+          </li>
+          <li class="col-lg-3 col-md-3 col-sm-6 ">
+            <div class="text-center">
+              <div class="member-thumb">
+                <img src="images/member4.jpg" class="img-responsive" alt="member 4" width="250px"/>
+                <div class="thumb-overlay">
+                  <a href="#"><span class="social-icon-linkedin"></span></a>
+                  <a href="#"><span class="social-icon-email"></span></a>
+                </div>
+              </div>
+              <div class="team-inner">
+                <p class="team-inner-header">TJ MELANSON</p>
+                <p class="team-inner-subtext">Computer Science</p>
+                <p class="team-inner-name">R2Duino</p>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
-    </div>
-  </div>
-</div> -->
+    </div><!-- /.templatemo-team -->
 
-<script src="js/jquery.min.js" type="text/javascript"></script>
-<script src="js/bootstrap.min.js"  type="text/javascript"></script>
-<script src="js/stickUp.min.js"  type="text/javascript"></script>
-<script src="js/colorbox/jquery.colorbox-min.js"  type="text/javascript"></script>
-<script src="js/templatemo_script.js"  type="text/javascript"></script>
-<!-- templatemo 395 urbanic -->
-</body>
-</html>
+    <div class="templatemo-footer" >
+      <div class="container">
+        <div class="row">
+          <div class="text-center">
+
+            <div class="footer_container">
+              <ul class="list-inline">
+                <li>
+                  <a href="#">
+                    <span class="social-icon-fb"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <span class="social-icon-rss"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <span class="social-icon-twitter"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <span class="social-icon-linkedin"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <span class="social-icon-dribbble"></span>
+                  </a>
+                </li>
+              </ul>
+              <div class="height30"></div>
+              <a class="btn btn-lg btn-orange" href="#" role="button" id="btn-back-to-top">Back To Top</a>
+              <div class="height30"></div>
+            </div>
+            <div class="footer_bottom_content">
+              <span id="footer-line">Created March 2016 <a href="#">ME210 Team 16</a></span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js"  type="text/javascript"></script>
+    <script src="js/stickUp.min.js"  type="text/javascript"></script>
+    <script src="js/colorbox/jquery.colorbox-min.js"  type="text/javascript"></script>
+    <script src="js/templatemo_script.js"  type="text/javascript"></script>
+    <!-- templatemo 395 urbanic -->
+  </body>
+  </html>

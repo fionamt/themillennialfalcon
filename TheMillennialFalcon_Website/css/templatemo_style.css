@@ -336,6 +336,12 @@ h1, h2, h3, h4, h5, h6, span, p { font-family: 'Open Sans', Arial, Helvetice Neu
     font-size:12px;
 }
 
+.team-inner-name {
+    font-weight:normal;
+    font-size:12px;
+    font-style: italic;
+}
+
 .row_team {
     margin-left:-50px;
     margin-top:70px;
@@ -528,6 +534,17 @@ a:hover .social-icon-twitter {
     width: 42px;
     height: 42px;
     display: block;
+}
+
+.social-icon-email {
+    background: url('../images/social-icon-dribbble.png') no-repeat;
+    width: 42px;
+    height: 42px;
+    display: block;
+}
+
+a:hover .social-icon-twitter {
+    background: url('../images/social-icon-dribbble-over.png') no-repeat;
 }
 
 a:hover .social-icon-linkedin {
